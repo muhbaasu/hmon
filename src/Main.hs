@@ -11,6 +11,19 @@ import Data.List (isPrefixOf)
 import Network.WebSockets (Connection, DataMessage(Text), sendDataMessage,
                            runServer, acceptRequest)
 
+{-
+
+Proposed architecture
+---------------------
+
+Collectors ==> Storage ==> Push & pull service ==> e.g. REST & WebSocket
+                                      ^
+                                      |
+                                      v
+                                  Statistics
+
+-}
+
 cpuInfo :: String -> [[Double]]
 cpuInfo = map (map parseNum) . map words . removeSpaces . getCoreLines
     where getCoreLines = takeWhile (not . isPrefixOf "intr") . drop 1 . lines
