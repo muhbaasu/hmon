@@ -52,4 +52,6 @@ identifier :: Parser String
 identifier = do
   n <- string "cpu" <?> "identifier"
   i <- digit <|> space <?> "identifier"
-  return $ n ++ [i]
+  return $ n ++ if i == ' '
+                   then ""
+                   else [i]
