@@ -28,7 +28,9 @@ $(makeClassy ''StatMetrics)
 parseStat :: Parser StatMetrics
 parseStat = do
   ms <- endBy cpuLine newline
-  return $ StatMetrics undefined ms
+  let t  = head ms
+      cs = tail ms
+  return $ StatMetrics t cs
 
 cpuLine :: Parser CoreMetric
 cpuLine = do
