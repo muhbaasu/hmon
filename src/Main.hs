@@ -2,6 +2,7 @@
 
 module Main (main) where
 
+import Collectors.Cpu
 import Control.Concurrent (threadDelay, forkIO)
 import Control.Concurrent.Chan (Chan, newChan, readChan, writeChan)
 import Control.Monad (forever, liftM)
@@ -31,10 +32,10 @@ cpuInfo = map (map parseNum) . map words . removeSpaces . getCoreLines
           parseNum s = (read s :: Double)
 
 cpuPercentage :: [Double] -> Double -> Double -> [Double]
-cpuPercentage cpu prevIdle prevTotal = idle:total:diffUsage:[]
-  where idle = cpu !! 3
+cpuPercentage cpu prevIdle prevTotal = idleTime:total:diffUsage:[]
+  where idleTime = cpu !! 3
         total = sum cpu
-        diffIdle = idle - prevIdle
+        diffIdle = idleTime - prevIdle
         diffTotal = total - prevTotal
         diffUsage = (100 * (diffTotal - diffIdle) / diffTotal)
 
