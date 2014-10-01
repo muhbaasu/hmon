@@ -39,7 +39,7 @@ cpuLine = do
   return $ CoreMetric (pack name) u n sy idl io ir so
 
 metrics :: Parser [Int]
-metrics = sepBy number space <?> "metrics"
+metrics = sepBy number (char ' ') <?> "metrics"
 
 number :: Parser Int
 number = do
