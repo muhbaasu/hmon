@@ -2,9 +2,8 @@
 
 module Collectors.Memory where
 
-import Control.Applicative ((<*))
+import Control.Applicative ((<$>), (<*))
 import Control.Lens.TH (makeClassy)
-import Data.Functor ((<$>))
 import Data.Text (Text(), pack)
 import Text.Parsec
 import Text.Parsec.Text
@@ -16,16 +15,13 @@ data MemoryMetric = MemoryMetric { _metricName :: !Text
 $(makeClassy ''MemoryMetric)
 
 parseStat :: Parser [MemoryMetric]
-parseStat = do
-  metrics <- endBy memoryLine newline
-  return metrics
+parseStat = endBy memoryLine newline
 
 memoryLine :: Parser MemoryMetric
 memoryLine = do
-  name <- manyTill anyChar $ string ":"
-  _ <- skipMany1 space
+  name <- pack <$> manyTill anyChar (string ":") <* skipMany1 space
   memSize <- memorySize
-  return $ MemoryMetric (pack name) memSize
+  return $ MemoryMetric name memSize
 
 memorySize :: Parser Int
-memorySize = read <$> (many1 digit) <* (optional $ string " kB")
+memorySize = read <$> many1 digit <* optional (string " kB")
