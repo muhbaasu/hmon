@@ -2,11 +2,11 @@
 
 module Collectors.Memory where
 
+import Control.Applicative ((<*))
 import Control.Lens.TH (makeClassy)
+import Data.Functor ((<$>))
 import Text.Parsec
 import Text.Parsec.String
-import Control.Applicative (pure, (<*>), (<*), (*>))
-import Data.Functor (fmap, (<$>))
 
 data MemoryMetric = MemoryMetric { _metricName :: ! [Char]
                                  , _size :: !Int }
