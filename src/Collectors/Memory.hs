@@ -1,16 +1,17 @@
-{-# LANGUAGE BangPatterns, TemplateHaskell #-}
+{-# LANGUAGE BangPatterns, OverloadedStrings, TemplateHaskell #-}
 
 module Collectors.Memory where
 
 import Control.Applicative ((<*))
 import Control.Lens.TH (makeClassy)
 import Data.Functor ((<$>))
+import Data.Text (Text(), pack)
 import Text.Parsec
-import Text.Parsec.String
+import Text.Parsec.Text
 
-data MemoryMetric = MemoryMetric { _metricName :: ! [Char]
-                                 , _size :: !Int }
-                    deriving Show
+data MemoryMetric = MemoryMetric { _metricName :: !Text
+                                 , _size       :: !Int }
+                  deriving Show
 
 $(makeClassy ''MemoryMetric)
 
@@ -19,13 +20,12 @@ parseStat = do
   metrics <- endBy memoryLine newline
   return metrics
 
-
 memoryLine :: Parser MemoryMetric
 memoryLine = do
-  name <-  manyTill anyChar $ string ":"
+  name <- manyTill anyChar $ string ":"
   _ <- skipMany1 space
   memSize <- memorySize
-  return $ MemoryMetric name memSize
+  return $ MemoryMetric (pack name) memSize
 
 memorySize :: Parser Int
-memorySize =  read <$> (many1 digit) <* (optional $ string " kB")
+memorySize = read <$> (many1 digit) <* (optional $ string " kB")

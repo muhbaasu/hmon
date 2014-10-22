@@ -1,11 +1,11 @@
-{-# LANGUAGE BangPatterns, TemplateHaskell #-}
+{-# LANGUAGE BangPatterns, OverloadedStrings, TemplateHaskell #-}
 
 module Collectors.Cpu where
 
 import Control.Lens.TH (makeClassy)
-import Data.Text (Text(), pack)
+import Data.Text (Text(), append, empty, pack, singleton)
 import Text.Parsec
-import Text.Parsec.String
+import Text.Parsec.Text
 
 data CoreMetric = CoreMetric { _coreName :: !Text
                              , _user     :: !Int
@@ -38,7 +38,7 @@ cpuLine = do
   _ <- space
   ms <- metrics
   let (u:n:sy:idl:io:ir:so:_) = ms
-  return $ CoreMetric (pack name) u n sy idl io ir so
+  return $ CoreMetric name u n sy idl io ir so
 
 metrics :: Parser [Int]
 metrics = sepBy number (char ' ') <?> "metrics"
@@ -48,10 +48,10 @@ number = do
   ds <- many1 digit <?> "number"
   return $ read ds
 
-identifier :: Parser String
+identifier :: Parser Text
 identifier = do
   n <- string "cpu" <?> "identifier"
   i <- digit <|> space <?> "identifier"
-  return $ n ++ if i == ' '
-                   then ""
-                   else [i]
+  return $ (pack n) `append` if i == ' '
+                                   then empty
+                                   else singleton i

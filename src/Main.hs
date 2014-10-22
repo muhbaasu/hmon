@@ -3,6 +3,7 @@
 module Main (main) where
 
 import Collectors.Cpu
+import Collectors.Memory
 import Control.Concurrent (threadDelay, forkIO)
 import Control.Concurrent.Chan (Chan, newChan, readChan, writeChan)
 import Control.Monad (forever, liftM)
