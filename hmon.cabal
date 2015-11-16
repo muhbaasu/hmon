@@ -19,14 +19,14 @@ executable hmon
   main-is:             Main.hs
   -- other-modules:
   -- other-extensions:
-  build-depends:       base >=4.7 && <4.8
+  build-depends:       base >=4.8
                      , parsec >=3.1
-                     , websockets >=0.8.2
+                     , websockets >=0.9.6
                      , mtl >=2.2
                      , bytestring >=0.10
-                     , text >=1.1
-                     , aeson >=0.8
-                     , lens >=4.4
+                     , text >=1.2
+                     , aeson >=0.10
+                     , lens >=4.13
 
   ghc-options:         -Wall -threaded
   hs-source-dirs:      src
